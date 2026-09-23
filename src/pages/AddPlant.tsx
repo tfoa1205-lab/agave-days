@@ -42,7 +42,11 @@ export function AddPlant() {
         memo: memo.trim() || undefined,
       });
       if (photoFile) {
-        await addPhoto({ plantId: plant.id, original: photoFile });
+        await addPhoto({
+          plantId: plant.id,
+          original: photoFile,
+          takenAt: purchaseDate ? new Date(`${purchaseDate}T00:00:00`).toISOString() : undefined,
+        });
       }
       navigate(`/plant/${plant.id}`, { replace: true });
     } finally {
@@ -102,6 +106,11 @@ export function AddPlant() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink-soft)" }}>初回写真</div>
+          {purchaseDate && (
+            <div style={{ fontSize: 12, color: "var(--muted)", marginTop: -2 }}>
+              購入日({purchaseDate})の撮影として記録されます
+            </div>
+          )}
           <label
             style={{
               display: "flex",
