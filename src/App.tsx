@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { AddPlant } from "./pages/AddPlant";
+import { EditPlant } from "./pages/EditPlant";
 import { PlantDetail } from "./pages/PlantDetail";
 import { Camera } from "./pages/Camera";
 import { Growth } from "./pages/Growth";
@@ -18,6 +19,7 @@ export default function App() {
       <Route path="/settings" element={<Settings />} />
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/plant/:id" element={<PlantDetail />} />
+      <Route path="/plant/:id/edit" element={<EditPlant />} />
       <Route path="/plant/:id/camera" element={<Camera />} />
       <Route path="/plant/:id/growth" element={<Growth />} />
       <Route path="/plant/:id/watering" element={<WateringHistory />} />

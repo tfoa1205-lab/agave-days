@@ -74,6 +74,19 @@ export async function updatePlant(id: string, patch: Partial<Plant>): Promise<vo
   await db.put("plants", { ...existing, ...patch, updatedAt: now() });
 }
 
+export async function deletePlant(id: string): Promise<void> {
+  const db = await getDB();
+  const [photos, waterings] = await Promise.all([
+    db.getAllFromIndex("photos", "plantId", id),
+    db.getAllFromIndex("waterings", "plantId", id),
+  ]);
+  const tx = db.transaction(["plants", "photos", "waterings"], "readwrite");
+  await tx.objectStore("plants").delete(id);
+  for (const p of photos) await tx.objectStore("photos").delete(p.id);
+  for (const w of waterings) await tx.objectStore("waterings").delete(w.id);
+  await tx.done;
+}
+
 // ---- Photos ----
 
 export async function makeThumbnail(blob: Blob, maxSize = 320): Promise<Blob> {
@@ -123,6 +136,11 @@ export async function getLatestPhoto(plantId: string): Promise<Photo | undefined
   return photos.at(-1);
 }
 
+export async function deletePhoto(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete("photos", id);
+}
+
 // ---- Waterings ----
 
 export async function addWatering(input: {
@@ -151,6 +169,11 @@ export async function listWateringsForPlant(plantId: string): Promise<Watering[]
 export async function getLatestWatering(plantId: string): Promise<Watering | undefined> {
   const all = await listWateringsForPlant(plantId);
   return all[0];
+}
+
+export async function deleteWatering(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete("waterings", id);
 }
 
 // ---- Backup ----

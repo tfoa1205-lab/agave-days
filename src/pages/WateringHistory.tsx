@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getPlant, listWateringsForPlant } from "../db";
+import { getPlant, listWateringsForPlant, deleteWatering } from "../db";
 import type { Plant, Watering } from "../types";
 import { BackIcon, DropIcon } from "../components/Icons";
 import { fmtLong } from "../utils/date";
@@ -14,6 +14,13 @@ export function WateringHistory() {
     getPlant(id).then((p) => setPlant(p ?? null));
     listWateringsForPlant(id).then(setWaterings);
   }, [id]);
+
+  async function handleDelete(w: Watering) {
+    const ok = window.confirm(`${fmtLong(w.wateredAt)}の水やり記録を削除しますか？`);
+    if (!ok) return;
+    await deleteWatering(w.id);
+    setWaterings((prev) => prev.filter((x) => x.id !== w.id));
+  }
 
   return (
     <div className="app-shell">
@@ -31,6 +38,16 @@ export function WateringHistory() {
             <DropIcon size={16} color="var(--sage)" />
             <span style={{ fontSize: 15, fontWeight: 600 }}>{fmtLong(w.wateredAt)}</span>
             {w.memo && <span style={{ fontSize: 13, color: "var(--muted)" }}>{w.memo}</span>}
+            <button
+              type="button"
+              onClick={() => handleDelete(w)}
+              aria-label="この記録を削除"
+              style={{ marginLeft: "auto", width: 30, height: 30, borderRadius: 10, background: "none", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--muted)" }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6" />
+              </svg>
+            </button>
           </div>
         ))}
       </div>

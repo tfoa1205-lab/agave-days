@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getPlant, listPhotosForPlant } from "../db";
+import { getPlant, listPhotosForPlant, deletePhoto } from "../db";
 import type { Photo, Plant } from "../types";
 import { PetalGlyph } from "../components/PetalGlyph";
 import { BackIcon, PauseIcon, PlayIcon } from "../components/Icons";
@@ -50,8 +50,17 @@ export function Growth() {
     return () => clearInterval(t);
   }, [playing, speed, filtered.length]);
 
-  const current = filtered[index];
+  const safeIndex = Math.min(index, filtered.length - 1);
+  const current = filtered[safeIndex];
   const currentUrl = useObjectUrl(current?.original);
+
+  async function handleDeleteCurrent() {
+    if (!current) return;
+    const ok = window.confirm(`${fmtLong(current.takenAt)}の写真を削除しますか？`);
+    if (!ok) return;
+    await deletePhoto(current.id);
+    setPhotos((prev) => prev.filter((p) => p.id !== current.id));
+  }
 
   return (
     <div className="app-shell">
@@ -116,7 +125,19 @@ export function Growth() {
                 </button>
               )}
             </div>
-            <div style={{ textAlign: "center", fontSize: 13, color: "var(--muted)", marginTop: -8 }}>{fmtLong(current.takenAt)} の写真</div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginTop: -8 }}>
+              <span style={{ fontSize: 13, color: "var(--muted)" }}>{fmtLong(current.takenAt)} の写真</span>
+              <button
+                type="button"
+                onClick={handleDeleteCurrent}
+                aria-label="この写真を削除"
+                style={{ background: "none", border: "none", padding: 2, display: "flex", alignItems: "center", cursor: "pointer", color: "var(--muted)" }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6" />
+                </svg>
+              </button>
+            </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <div style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>再生速度</div>
@@ -149,7 +170,7 @@ export function Growth() {
               <div style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>写真タイムライン</div>
               <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4 }}>
                 {filtered.map((p, i) => (
-                  <Thumb key={p.id} photo={p} active={i === index} onClick={() => { setPlaying(false); setIndex(i); }} />
+                  <Thumb key={p.id} photo={p} active={i === safeIndex} onClick={() => { setPlaying(false); setIndex(i); }} />
                 ))}
               </div>
             </div>

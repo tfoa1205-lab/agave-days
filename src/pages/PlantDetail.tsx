@@ -61,7 +61,13 @@ export function PlantDetail() {
         <Link to="/" aria-label="ホームに戻る" style={{ width: 36, height: 36, borderRadius: 12, background: "var(--surface)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <BackIcon />
         </Link>
-        <div className="serif" style={{ fontWeight: 600, fontSize: 18 }}>{plant.name}</div>
+        <div className="serif" style={{ fontWeight: 600, fontSize: 18, flex: 1 }}>{plant.name}</div>
+        <Link to={`/plant/${id}/edit`} aria-label="株を編集" style={{ width: 36, height: 36, borderRadius: 12, background: "var(--surface)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z" />
+          </svg>
+        </Link>
       </div>
 
       <div style={{ flex: "1 1 auto", padding: "8px 20px 32px", display: "flex", flexDirection: "column", gap: 20 }}>
