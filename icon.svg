@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#F0EAD8"/>
+  <g transform="translate(100,100)">
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#5C7A6E" transform="rotate(0)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#3E5A50" transform="rotate(36)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#5C7A6E" transform="rotate(72)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#3E5A50" transform="rotate(108)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#5C7A6E" transform="rotate(144)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#3E5A50" transform="rotate(180)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#5C7A6E" transform="rotate(216)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#3E5A50" transform="rotate(252)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#5C7A6E" transform="rotate(288)"/>
+    <path d="M0,-3 L8,-60 Q0,-72 -8,-60 Z" fill="#3E5A50" transform="rotate(324)"/>
+    <circle r="10" fill="#2B4038"/>
+  </g>
+</svg>
