@@ -134,6 +134,21 @@ export function PlantDetail() {
           <ChevronRightIcon />
         </Link>
 
+        <div style={{ display: "flex", gap: 12 }}>
+          <Link
+            to={`/plant/${id}/compare`}
+            style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: "13px 10px", fontSize: 14, fontWeight: 600 }}
+          >
+            前回と比較
+          </Link>
+          <Link
+            to={`/plant/${id}/album`}
+            style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: "13px 10px", fontSize: 14, fontWeight: 600 }}
+          >
+            成長アルバム
+          </Link>
+        </div>
+
         <Link to={`/plant/${id}/watering`} style={{ fontSize: 13, color: "var(--muted)", textAlign: "center", textDecoration: "underline" }}>
           水やり履歴を見る
         </Link>
