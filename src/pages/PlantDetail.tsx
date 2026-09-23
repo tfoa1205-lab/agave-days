@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getPlant, getLatestPhoto, getLatestWatering, addWatering, updatePlant } from "../db";
 import type { Plant, Photo, Watering } from "../types";
@@ -43,7 +43,37 @@ export function PlantDetail() {
   async function handleMemoBlur() {
     if (!plant || memo === (plant.memo ?? "")) return;
     await updatePlant(id, { memo: memo || undefined });
+    savedMemoRef.current = memo;
   }
+
+  // Debounced autosave, plus a flush-on-unmount safety net, so a memo edit
+  // is never lost if the user navigates away before the field loses focus.
+  const memoRef = useRef(memo);
+  const idRef = useRef(id);
+  const baselineRef = useRef("");
+  const savedMemoRef = useRef("");
+  useEffect(() => {
+    memoRef.current = memo;
+    idRef.current = id;
+    baselineRef.current = plant?.memo ?? "";
+  });
+
+  useEffect(() => {
+    if (!plant || memo === (plant.memo ?? "")) return;
+    const timer = setTimeout(() => {
+      updatePlant(id, { memo: memo || undefined });
+      savedMemoRef.current = memo;
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [memo, plant, id]);
+
+  useEffect(() => {
+    return () => {
+      if (memoRef.current !== baselineRef.current && memoRef.current !== savedMemoRef.current) {
+        updatePlant(idRef.current, { memo: memoRef.current || undefined });
+      }
+    };
+  }, []);
 
   if (plant === undefined) return null;
   if (plant === null) {
