@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { addPhoto, getPlant } from "../db";
 import type { Plant } from "../types";
+import { useDeviceLevel } from "../hooks/useDeviceLevel";
+
+const LEVEL_THRESHOLD = 8;
 
 export function Camera() {
   const { id = "" } = useParams();
@@ -10,6 +13,8 @@ export function Camera() {
   const [plant, setPlant] = useState<Plant | null>(null);
   const [cameraError, setCameraError] = useState(false);
   const [busy, setBusy] = useState(false);
+  const { tilt, needsPermission, requestPermission } = useDeviceLevel();
+  const isLevel = tilt !== null && tilt < LEVEL_THRESHOLD;
 
   useEffect(() => {
     getPlant(id).then((p) => setPlant(p ?? null));
@@ -87,10 +92,26 @@ export function Camera() {
           </svg>
         </button>
         <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.04em" }}>{plant ? `${plant.name} を撮影` : "撮影"}</div>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(110,127,94,0.35)", border: "1px solid #8FA57B", color: "#C7D6B8", fontSize: 11, fontWeight: 700, padding: "5px 10px", borderRadius: 100 }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#A8D18D", display: "inline-block" }} />
-          <span>水平</span>
-        </div>
+        <button
+          type="button"
+          onClick={needsPermission ? requestPermission : undefined}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            background: isLevel ? "rgba(110,127,94,0.35)" : "rgba(224,160,92,0.25)",
+            border: `1px solid ${isLevel ? "#8FA57B" : "#E0A05C"}`,
+            color: isLevel ? "#C7D6B8" : "#F0C79A",
+            fontSize: 11,
+            fontWeight: 700,
+            padding: "5px 10px",
+            borderRadius: 100,
+            cursor: needsPermission ? "pointer" : "default",
+          }}
+        >
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: isLevel ? "#A8D18D" : "#E0A05C", display: "inline-block" }} />
+          <span>{tilt === null ? (needsPermission ? "タップして計測" : "水平") : isLevel ? "水平" : `傾き${Math.round(tilt)}°`}</span>
+        </button>
       </div>
 
       <div style={{ flex: "1 1 auto", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: "0 16px" }}>
@@ -105,8 +126,23 @@ export function Camera() {
           )}
           <div style={{ position: "absolute", left: 0, right: 0, top: "50%", height: 1, background: "rgba(255,255,255,0.18)" }} />
           <div style={{ position: "absolute", top: 0, bottom: 0, left: "50%", width: 1, background: "rgba(255,255,255,0.10)" }} />
-          <div style={{ position: "absolute", left: "50%", top: "50%", width: 128, height: 128, transform: "translate(-50%,-50%)", border: "2px dashed rgba(255,255,255,0.55)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div style={{ width: 9, height: 9, borderRadius: "50%", background: "#E0A05C" }} />
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              width: 128,
+              height: 128,
+              transform: "translate(-50%,-50%)",
+              border: `2px dashed ${tilt !== null ? (isLevel ? "rgba(168,209,141,0.85)" : "rgba(224,160,92,0.85)") : "rgba(255,255,255,0.55)"}`,
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "border-color 0.15s ease",
+            }}
+          >
+            <div style={{ width: 9, height: 9, borderRadius: "50%", background: tilt !== null && isLevel ? "#A8D18D" : "#E0A05C" }} />
           </div>
         </div>
         <div style={{ background: "rgba(255,255,255,0.08)", padding: "9px 16px", borderRadius: 100, fontSize: 13, color: "#EDE7D8" }}>成長点を中央に合わせてください</div>
