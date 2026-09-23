@@ -129,7 +129,6 @@ export function AddPlant() {
             <input
               type="file"
               accept="image/*"
-              capture="environment"
               style={{ display: "none" }}
               onChange={(e) => setPhotoFile(e.target.files?.[0] ?? null)}
             />

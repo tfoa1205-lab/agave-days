@@ -103,10 +103,11 @@ function MilestoneCard({ milestone, isLast }: { milestone: Milestone; isLast: bo
         <div
           style={{
             aspectRatio: "1 / 1",
-            background: url ? "#000" : "linear-gradient(180deg, #F1ECDC 0%, #E8E0CB 100%)",
-            backgroundImage: url ? `url("${url}")` : undefined,
+            backgroundColor: url ? "#000" : undefined,
+            backgroundImage: url ? `url("${url}")` : "linear-gradient(180deg, #F1ECDC 0%, #E8E0CB 100%)",
             backgroundSize: "cover",
             backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }}
         />
         <div style={{ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>

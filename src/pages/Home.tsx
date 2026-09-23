@@ -125,10 +125,11 @@ function PlantCard({ plant, photo, watering }: Row) {
         style={{
           position: "relative",
           aspectRatio: "1 / 1",
-          background: photoUrl ? "#000" : "linear-gradient(180deg, #F1ECDC 0%, #E8E0CB 100%)",
-          backgroundImage: photoUrl ? `url("${photoUrl}")` : undefined,
+          backgroundColor: photoUrl ? "#000" : undefined,
+          backgroundImage: photoUrl ? `url("${photoUrl}")` : "linear-gradient(180deg, #F1ECDC 0%, #E8E0CB 100%)",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

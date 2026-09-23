@@ -146,10 +146,11 @@ function Frame({ url, label }: { url?: string; label: string }) {
           aspectRatio: "1 / 1",
           borderRadius: 18,
           overflow: "hidden",
-          background: url ? "#000" : "linear-gradient(180deg, #F1ECDC 0%, #E8E0CB 100%)",
-          backgroundImage: url ? `url("${url}")` : undefined,
+          backgroundColor: url ? "#000" : undefined,
+          backgroundImage: url ? `url("${url}")` : "linear-gradient(180deg, #F1ECDC 0%, #E8E0CB 100%)",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       />
       <div style={{ fontSize: 12, color: "var(--muted)", textAlign: "center" }}>{label}</div>
