@@ -166,7 +166,10 @@ export function PlantDetail() {
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <PlayIcon size={20} color="var(--clay)" />
-            <span style={{ fontSize: 15, fontWeight: 600 }}>成長を見る</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <span style={{ fontSize: 15, fontWeight: 600 }}>成長を見る</span>
+              <span style={{ fontSize: 12, color: "var(--muted)" }}>1枚ずつ再生して振り返る</span>
+            </div>
           </div>
           <ChevronRightIcon />
         </Link>
@@ -174,15 +177,17 @@ export function PlantDetail() {
         <div style={{ display: "flex", gap: 12 }}>
           <Link
             to={`/plant/${id}/compare`}
-            style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: "13px 10px", fontSize: 14, fontWeight: 600 }}
+            style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: "13px 10px" }}
           >
-            前回と比較
+            <span style={{ fontSize: 14, fontWeight: 600 }}>前回と比較</span>
+            <span style={{ fontSize: 11, color: "var(--muted)" }}>2枚を見比べる</span>
           </Link>
           <Link
             to={`/plant/${id}/album`}
-            style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: "13px 10px", fontSize: 14, fontWeight: 600 }}
+            style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: "13px 10px" }}
           >
-            成長アルバム
+            <span style={{ fontSize: 14, fontWeight: 600 }}>アルバム</span>
+            <span style={{ fontSize: 11, color: "var(--muted)" }}>全部の写真を一覧</span>
           </Link>
         </div>
 
