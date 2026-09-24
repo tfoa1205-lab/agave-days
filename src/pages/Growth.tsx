@@ -115,24 +115,26 @@ export function Growth() {
               }}
             >
               {!currentUrl && <PetalGlyph size={190} />}
-              {filtered.length > 1 && (
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginTop: -8 }}>
+              {filtered.length > 1 ? (
                 <button
                   type="button"
                   onClick={() => setPlaying((v) => !v)}
                   aria-label={playing ? "一時停止" : "再生"}
-                  style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: 56, height: 56, borderRadius: "50%", background: "rgba(23,21,15,0.55)", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+                  style={{ width: 30, height: 30, borderRadius: "50%", background: "var(--clay)", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}
                 >
-                  {playing ? <PauseIcon /> : <PlayIcon />}
+                  {playing ? <PauseIcon size={13} /> : <PlayIcon size={13} />}
                 </button>
+              ) : (
+                <div style={{ width: 30, flexShrink: 0 }} />
               )}
-            </div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginTop: -8 }}>
               <span style={{ fontSize: 13, color: "var(--muted)" }}>{fmtLong(current.takenAt)} の写真</span>
               <button
                 type="button"
                 onClick={handleDeleteCurrent}
                 aria-label="この写真を削除"
-                style={{ background: "none", border: "none", padding: 2, display: "flex", alignItems: "center", cursor: "pointer", color: "var(--muted)" }}
+                style={{ background: "none", border: "none", padding: 2, display: "flex", alignItems: "center", cursor: "pointer", color: "var(--muted)", flexShrink: 0 }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6" />
