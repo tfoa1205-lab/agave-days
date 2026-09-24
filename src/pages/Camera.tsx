@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { addPhoto, getPlant } from "../db";
 import type { Plant } from "../types";
 import { useDeviceLevel } from "../hooks/useDeviceLevel";
+import { dateInputToIso, todayInputValue } from "../utils/date";
 
 const LEVEL_THRESHOLD = 8;
 
@@ -13,8 +14,10 @@ export function Camera() {
   const [plant, setPlant] = useState<Plant | null>(null);
   const [cameraError, setCameraError] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [takenAtDate, setTakenAtDate] = useState(todayInputValue());
   const { tilt, needsPermission, requestPermission } = useDeviceLevel();
   const isLevel = tilt !== null && tilt < LEVEL_THRESHOLD;
+  const isBackdated = takenAtDate !== todayInputValue();
 
   useEffect(() => {
     getPlant(id).then((p) => setPlant(p ?? null));
@@ -60,7 +63,7 @@ export function Camera() {
       const blob: Blob = await new Promise((resolve, reject) =>
         canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("capture failed"))), "image/jpeg", 0.92)
       );
-      await addPhoto({ plantId: id, original: blob });
+      await addPhoto({ plantId: id, original: blob, takenAt: dateInputToIso(takenAtDate) });
       goBack();
     } finally {
       setBusy(false);
@@ -71,7 +74,7 @@ export function Camera() {
     if (!file || busy) return;
     setBusy(true);
     try {
-      await addPhoto({ plantId: id, original: file });
+      await addPhoto({ plantId: id, original: file, takenAt: dateInputToIso(takenAtDate) });
       goBack();
     } finally {
       setBusy(false);
@@ -112,6 +115,42 @@ export function Camera() {
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: isLevel ? "#A8D18D" : "#E0A05C", display: "inline-block" }} />
           <span>{tilt === null ? (needsPermission ? "タップして計測" : "水平") : isLevel ? "水平" : `傾き${Math.round(tilt)}°`}</span>
         </button>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "center", padding: "10px 20px 0" }}>
+        <label
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            background: isBackdated ? "rgba(224,160,92,0.18)" : "rgba(255,255,255,0.08)",
+            border: `1px solid ${isBackdated ? "rgba(224,160,92,0.55)" : "rgba(255,255,255,0.15)"}`,
+            padding: "6px 12px",
+            borderRadius: 100,
+            cursor: "pointer",
+          }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={isBackdated ? "#F0C79A" : "#C7BFAE"} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="5" width="18" height="16" rx="3" />
+            <path d="M3 10h18M8 3v4M16 3v4" />
+          </svg>
+          <span style={{ fontSize: 12, color: isBackdated ? "#F0C79A" : "#EDE7D8" }}>{isBackdated ? "この日で記録" : "撮影日"}</span>
+          <input
+            type="date"
+            value={takenAtDate}
+            max={todayInputValue()}
+            onChange={(e) => setTakenAtDate(e.target.value || todayInputValue())}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: isBackdated ? "#F0C79A" : "#EDE7D8",
+              fontSize: 12,
+              fontWeight: 700,
+              fontFamily: "inherit",
+              colorScheme: "dark",
+            }}
+          />
+        </label>
       </div>
 
       <div style={{ flex: "1 1 auto", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: "0 16px" }}>
