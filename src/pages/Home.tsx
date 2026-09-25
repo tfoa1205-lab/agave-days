@@ -106,7 +106,7 @@ export function Home() {
 }
 
 function PlantCard({ plant, photo, watering }: Row) {
-  const photoUrl = useObjectUrl(photo?.thumbnail);
+  const photoUrl = useObjectUrl(photo?.original);
   const days = watering ? daysSince(watering.wateredAt) : undefined;
 
   return (

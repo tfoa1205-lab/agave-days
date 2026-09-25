@@ -89,12 +89,12 @@ export function Compare() {
         {mode === "slider" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <div style={{ position: "relative", aspectRatio: "1 / 1", borderRadius: 22, overflow: "hidden", background: "#000" }}>
-              {beforeUrl && (
-                <img src={beforeUrl} alt="前" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-              )}
               {afterUrl && (
+                <img src={afterUrl} alt="今" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+              )}
+              {beforeUrl && (
                 <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}>
-                  <img src={afterUrl} alt="今" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <img src={beforeUrl} alt="前" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               )}
               <div style={{ position: "absolute", top: 0, bottom: 0, left: `${sliderPos}%`, width: 3, background: "#fff", transform: "translateX(-1.5px)", boxShadow: "0 0 6px rgba(0,0,0,0.4)" }} />

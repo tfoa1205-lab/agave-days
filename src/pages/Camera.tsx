@@ -4,6 +4,7 @@ import { addPhoto, getPlant } from "../db";
 import type { Plant } from "../types";
 import { useDeviceLevel } from "../hooks/useDeviceLevel";
 import { dateInputToIso, todayInputValue } from "../utils/date";
+import { captureSharpestSquare } from "../utils/capture";
 
 const LEVEL_THRESHOLD = 8;
 
@@ -27,7 +28,15 @@ export function Camera() {
     let stream: MediaStream | null = null;
     let cancelled = false;
     navigator.mediaDevices
-      ?.getUserMedia({ video: { facingMode: "environment" }, audio: false })
+      ?.getUserMedia({
+        video: {
+          facingMode: "environment",
+          width: { ideal: 4096 },
+          height: { ideal: 4096 },
+          advanced: [{ focusMode: "continuous" } as MediaTrackConstraintSet],
+        },
+        audio: false,
+      })
       .then((s) => {
         if (cancelled) {
           s.getTracks().forEach((t) => t.stop());
@@ -52,17 +61,7 @@ export function Camera() {
     if (!video || busy) return;
     setBusy(true);
     try {
-      const size = Math.min(video.videoWidth, video.videoHeight);
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d")!;
-      const sx = (video.videoWidth - size) / 2;
-      const sy = (video.videoHeight - size) / 2;
-      ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
-      const blob: Blob = await new Promise((resolve, reject) =>
-        canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("capture failed"))), "image/jpeg", 0.92)
-      );
+      const blob = await captureSharpestSquare(video);
       await addPhoto({ plantId: id, original: blob, takenAt: dateInputToIso(takenAtDate) });
       goBack();
     } finally {
